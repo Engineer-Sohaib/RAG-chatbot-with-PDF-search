@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>DocSearch AI — Intelligent PDF Assistant</title>
+    <meta name="description" content="AI-powered document search and question answering. Upload PDFs and ask questions in plain English." />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <!-- Tailwind CDN for non-build usage; replaced by PostCSS in production -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+      tailwind.config = {
+        theme: {
+          extend: {
+            fontFamily: {
+              sans: ["system-ui", "sans-serif"],
+              mono: ["'JetBrains Mono'", "monospace"],
+            },
+          },
+        },
+      };
+    </script>
+    <link
+      href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      /* Scrollbar styling */
+      ::-webkit-scrollbar { width: 6px; }
+      ::-webkit-scrollbar-track { background: transparent; }
+      ::-webkit-scrollbar-thumb { background: #44403c; border-radius: 3px; }
+      ::-webkit-scrollbar-thumb:hover { background: #57534e; }
+
+      /* Prose overrides for markdown */
+      .prose-invert a { color: #f59e0b; }
+      .prose-invert code {
+        background: #1c1917;
+        padding: 2px 5px;
+        border-radius: 4px;
+        font-size: 0.8em;
+        color: #fbbf24;
+      }
+      .prose-invert pre { background: #1c1917; }
+      .prose-invert blockquote {
+        border-left-color: #f59e0b;
+        color: #a8a29e;
+      }
+
+      /* Bounce animation */
+      @keyframes bounce {
+        0%, 80%, 100% { transform: scale(0); }
+        40% { transform: scale(1); }
+      }
+      .animate-bounce {
+        animation: bounce 1.2s ease-in-out infinite;
+      }
+    </style>
+  </head>
+  <body class="bg-stone-950">
+    <div id="root"></div>
+    <script type="module" src="/src/main.tsx"></script>
+  </body>
+</html>

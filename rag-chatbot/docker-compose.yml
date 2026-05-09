@@ -1,0 +1,62 @@
+version: "3.9"
+
+# ── AI Document Search Chatbot — Docker Compose ───────────────────────────────
+# Usage:
+#   cp backend/.env.example backend/.env    # fill in OPENAI_API_KEY
+#   docker compose up --build
+#
+# Services:
+#   backend  — FastAPI on http://localhost:8000
+#   frontend — Nginx serving built React on http://localhost:3000
+
+services:
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    container_name: rag-chatbot-backend
+    restart: unless-stopped
+    ports:
+      - "8000:8000"
+    env_file:
+      - ./backend/.env
+    volumes:
+      # Persist vector index and uploaded files across container restarts
+      - rag_uploads:/app/data/uploads
+      - rag_faiss:/app/data/faiss_index
+    healthcheck:
+      test: ["CMD", "python", "-c",
+        "import urllib.request; urllib.request.urlopen('http://localhost:8000/api/health')"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 20s
+    networks:
+      - app-network
+
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile.prod
+      args:
+        # Point frontend at the backend — override for cloud deployments
+        VITE_API_URL: http://localhost:8000
+    container_name: rag-chatbot-frontend
+    restart: unless-stopped
+    ports:
+      - "3000:80"
+    depends_on:
+      backend:
+        condition: service_healthy
+    networks:
+      - app-network
+
+volumes:
+  rag_uploads:
+    driver: local
+  rag_faiss:
+    driver: local
+
+networks:
+  app-network:
+    driver: bridge
